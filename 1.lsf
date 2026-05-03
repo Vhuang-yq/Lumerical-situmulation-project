@@ -1,0 +1,106 @@
+deleteall;
+clear;
+
+# --- 1. 参数定义 ---
+wg_w = 0.5e-6;        # 波导宽度
+wg_h = 0.22e-6;       # 波导高度
+L_arm = 20e-6;        # 干涉臂基础长度
+d = 10e-6;            # 两臂中心间距
+dL = 0.8e-6;          # 臂长差 (注意：在直线几何中，我们会拉齐物理长度，相位差需通过折射率模拟)
+mat = "Si (Silicon) - Palik";
+
+# 计算关键坐标 (核心修复部分)
+# S-bend 使用 90度圆弧近似，半径为 d/2
+radius = d/2;
+x_split_center = -15e-6;                     # 分束器中心X坐标
+x_arm_start = x_split_center + radius;       # 干涉臂起始X坐标
+
+# 为了保证闭合，合束器必须对齐到最长的那条臂
+# 这里我们以 "最长臂" 的终点作为合束器的起点
+x_arm_end = x_arm_start + L_arm + dL;        
+x_output_start = x_arm_end + radius;         # 输出波导起始X坐标
+
+# --- 2. 几何结构绘制 ---
+
+# A. 输入波导 (Input)
+#addrect; set("name","input_wg");
+#set("x min", -25e-6); set("x max", x_split_center);
+#set("y", 0); set("y span", wg_w);
+#set("z", 0); set("z span", wg_h); set("material", mat);
+
+# B. Y-Splitter (左侧分束器 - 90度圆弧)
+# 上侧圆弧
+#addring; set("name","split_arc_up");
+#set("x", x_split_center); set("y", d/2); # 圆心
+#set("inner radius", radius - wg_w/2); 
+#set("outer radius", radius + wg_w/2);
+#set("theta start", 270); set("theta stop", 360);
+#set("z", 0); set("z span", wg_h); set("material", mat);
+
+# 下侧圆弧
+#addring; set("name","split_arc_down");
+#set("x", x_split_center); set("y", -d/2); # 圆心
+#set("inner radius", radius - wg_w/2); 
+##set("outer radius", radius + wg_w/2);
+#set("theta start", 0); set("theta stop", 90);
+#set("z", 0); set("z span", wg_h); set("material", mat);
+
+# C. 干涉臂 (Arms) - 关键修改：两臂必须终结于同一个 X 坐标
+# 上臂 (补齐长度以连接)
+#addrect; set("name","arm_up");
+#set("x min", x_arm_start); set("x max", x_arm_end);
+#set("y", d/2); set("y span", wg_w);
+#set("z", 0); set("z span", wg_h); set("material", mat);
+
+# 下臂
+#addrect; set("name","arm_down");
+#set("x min", x_arm_start); set("x max", x_arm_end);
+#set("y", -d/2); set("y span", wg_w);
+#set("z", 0); set("z span", wg_h); set("material", mat);
+
+# D. Y-Combiner (右侧合束器 - 完美对齐)
+# 上侧合束圆弧
+#addring; set("name","combine_arc_up");
+#set("x", x_arm_end); set("y", 0); # 圆心在 y=0
+#set("inner radius", radius - wg_w/2); 
+#set("outer radius", radius + wg_w/2);
+#set("theta start", 0); set("theta stop", 90); # 第一象限弧
+#set("z", 0); set("z span", wg_h); set("material", mat);
+
+# 下侧合束圆弧
+#addring; set("name","combine_arc_down");
+#set("x", x_arm_end); set("y", 0); # 圆心在 y=0
+##set("inner radius", radius - wg_w/2); 
+#set("outer radius", radius + wg_w/2);
+#set("theta start", 270); set("theta stop", 360); # 第四象限弧
+#set("z", 0); set("z span", wg_h); set("material", mat);
+
+# E. 输出波导
+#addrect; set("name","output_wg");
+#set("x min", x_output_start); set("x max", x_output_start + 10e-6);
+#set("y", 0); set("y span", wg_w);
+#set("z", 0); set("z span", wg_h); set("material", mat);
+
+# --- 3. 仿真环境设置 ---
+addfdtd;
+set("dimension", 2); 
+set("x min", -22e-6); set("x max", x_output_start + 5e-6);
+set("y span", 12e-6);
+set("mesh accuracy", 1);
+set("simulation time", 3000e-15);
+
+# --- 4. 光源与监视器 ---
+addmode; 
+set("name","source");
+set("injection axis", "x-axis");
+set("x", -20e-6); set("y span", 4e-6);
+set("wavelength start", 1.5e-6); set("wavelength stop", 1.6e-6);
+
+addprofile; 
+set("name", "field_profile");
+set("x min", -22e-6); set("x max", x_output_start + 5e-6); set("y span", 15e-6);
+
+addpower; 
+set("name", "transmission");
+set("monitor type", "Linear Y");
+set("x", x_output_start + 2e-6); set("y span", 4e-6);
