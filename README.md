@@ -147,6 +147,35 @@ YZ 截面光场分布如下：
 
 ---
 
+## 5.3 电场传播分布（Electric Field Propagation）
+
+MZI 中的电场传播情况如下图所示：
+
+![Electric Field](./figures/electric_field.png)
+
+### 分析
+
+从图中可以观察到：
+
+- 输入光在 Y-splitter 处分成两路
+- 两条干涉臂中的电场分布较均匀
+- 波导弯曲区域存在少量辐射损耗
+- 在 Y-combiner 处重新合束形成干涉
+
+此外：
+
+- 光场主要限制在硅波导内部
+- 模式传播稳定
+- 能量泄露较小
+
+说明当前波导结构具有较好的导波能力。
+
+该结果验证了：
+
+- MZI 的干涉工作原理
+- Y-splitter / combiner 的分束与合束功能
+- 硅波导对 TE 模式的良好约束特性
+
 # 6. MZI 干涉原理分析
 
 MZI 输出传输满足：
@@ -201,31 +230,9 @@ Transmission 未达到理论最大值，可能原因包括：
 
 # 8. 可优化方向
 
-后续可以继续优化：
-
 ## 结构优化
 
-- 使用 MMI 替代 Y-splitter
-- 优化分支角度
-- 加入 adiabatic taper
-
----
-
-## 功能扩展
-
-- 热光调制（Thermo-optic）
-- 电光调制（Electro-optic）
-- MZI Optical Switch
-
----
-
-## 深度分析
-
-进一步提取：
-
-- Insertion Loss
-- Extinction Ratio
-- Free Spectral Range（FSR）
+- ### 使用 MMI 替代 Y-splitter 在实际的工业生产当中非常难实现上述的结构，因此大部分的MZI是采用两个MMI的结构组成。我们会在下次完成。本次的仿真基于一种非常理想的情况，也降低了很多的光衍射带来的能量损失。
 
 ---
 
@@ -239,7 +246,6 @@ Transmission 未达到理论最大值，可能原因包括：
 
 验证了：
 
-- Y-splitter / combiner 的工作原理
 - MZI 干涉机制
 - 波导中的模式传播特性
 
@@ -258,15 +264,10 @@ Transmission 未达到理论最大值，可能原因包括：
 
 ---
 
-# 软件环境
-
-- Ansys Lumerical FDTD 2024 R1
-
----
 
 # 项目关键词
 
-```text
+```
 Silicon Photonics
 Lumerical
 FDTD
