@@ -151,7 +151,7 @@ YZ 截面光场分布如下：
 
 MZI 中的电场传播情况如下图所示：
 
-![Electric Field](./images/electric_field.png)
+![Electric Field](电场.png)
 
 ### 分析
 
