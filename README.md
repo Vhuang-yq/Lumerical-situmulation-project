@@ -130,22 +130,18 @@ T \approx 0.80
 
 ## 5.2 光场分布（Field Distribution）
 
-YZ 截面光场分布如下：
-
-![Field Distribution](./figures/field_distribution.png)
+![光场图](光场分布.png)
 
 ---
 
 ### 分析
-
-可以看到：
 
 - 光场主要集中在硅波导核心区域
 - 模场呈现典型 TE-like 分布
 - 能量约束良好
 - 辐射损耗较低
 
-说明该波导结构具有较好的导模性能。
+该波导结构具有较好的导模性能。
 
 ---
 
